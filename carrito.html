@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras</title>
+    <link rel="stylesheet" href="styles/carrito.css">
+</head>
+
+<body>
+    <header>
+        <h1>Tu Carrito</h1>
+        <div style="position: absolute; top: 10px; right: 10px; display: flex; align-items: center; gap: 5px;">
+            <span>Bienvenido, User</span>
+            <img src="img/Perfil.png" alt="User Icon" style="width: 20px; height: 20px;">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="productos.html">Seguir Comprando</a></li>
+                <li><a href="dashboard.html">Panel de Vendedor</a></li>
+                <li><a href="index.html" id="cerrarSesion">Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+    </header>
+
+
+    <section class="main">
+        <div class="carrito">
+            <h2>Productos en tu carrito</h2>
+            <div id="listaCarrito">
+                <!-- Nota: Los productos agregados van a aparecer aquí -->
+            </div>
+            <h3>Total: $<span id="total">0</span></h3>
+            <button id="comprar">Finalizar compra</button>
+        </div>
+    </section>
+    <footer>
+        <p>&copy; 2025 Marketplace EcuaLocal - Todos los derechos reservados</p>
+    </footer>
+
+    <script src="scripts/carrito.js"></script>
+</body>
+
+</html>
