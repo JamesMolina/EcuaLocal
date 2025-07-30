@@ -1,5 +1,6 @@
-import React from 'react';
-import './css/signup.css';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import "../css/signup.css";
 
 function Signup() {
   return (
