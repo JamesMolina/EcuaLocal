@@ -24,8 +24,8 @@ const Login = () => {
           <button type="submit">Entrar</button>
         </form>
 
-        <p>No tienes cuenta? <a href="signup.html">Regístrate aquí</a></p>
-        <p>Vuelve al <a href="index.html">Inicio aquí</a></p>
+        <p>No tienes cuenta? <a href="/signup">Regístrate aquí</a></p>
+        <p>Vuelve al <a href="/">Inicio aquí</a></p>
       </section>
 
       <footer>
