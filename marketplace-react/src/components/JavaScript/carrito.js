@@ -1,199 +1,116 @@
 import React, { useState, useEffect } from "react";
+import perfilImg from "../../img/Perfil.png";
 import "../css/carrito.css";
 
-const Carrito = () => {
-  const [carrito, setCarrito] = useState(() => {
-    return JSON.parse(localStorage.getItem("carrito")) || [];
-  });
+function Carrito() {
+  const [carrito, setCarrito] = useState([]);
+  const [total, setTotal] = useState(0);
 
-  // Actualiza localStorage y estado
-  const actualizarCarrito = (nuevoCarrito) => {
-    setCarrito(nuevoCarrito);
-    localStorage.setItem("carrito", JSON.stringify(nuevoCarrito));
-  };
+  // Cargar carrito desde localStorage
+  useEffect(() => {
+    const items = JSON.parse(localStorage.getItem("carrito")) || [];
+    setCarrito(items);
+  }, []);
 
-  // Incrementar cantidad
+  // Calcular total cada vez que cambia el carrito
+  useEffect(() => {
+    const nuevoTotal = carrito.reduce((acc, prod) => acc + prod.precio * prod.cantidad, 0);
+    setTotal(nuevoTotal);
+    localStorage.setItem("carrito", JSON.stringify(carrito));
+  }, [carrito]);
+
   const incrementar = (idx) => {
-    const nuevoCarrito = [...carrito];
-    nuevoCarrito[idx].cantidad++;
-    actualizarCarrito(nuevoCarrito);
+    setCarrito((prev) =>
+      prev.map((p, i) => (i === idx ? { ...p, cantidad: p.cantidad + 1 } : p))
+    );
   };
 
-  // Decrementar cantidad
   const decrementar = (idx) => {
-    const nuevoCarrito = [...carrito];
-    if (nuevoCarrito[idx].cantidad > 1) {
-      nuevoCarrito[idx].cantidad--;
-      actualizarCarrito(nuevoCarrito);
-    }
+    setCarrito((prev) =>
+      prev.map((p, i) =>
+        i === idx && p.cantidad > 1 ? { ...p, cantidad: p.cantidad - 1 } : p
+      )
+    );
   };
 
-  // Eliminar producto
   const eliminar = (idx) => {
-    const nuevoCarrito = [...carrito];
-    nuevoCarrito.splice(idx, 1);
-    actualizarCarrito(nuevoCarrito);
+    setCarrito((prev) => prev.filter((_, i) => i !== idx));
   };
 
-  // Finalizar compra
   const comprar = () => {
-    if (carrito.length > 0) {
-      alert("Compra realizada con éxito!");
-      actualizarCarrito([]);
-    } else {
+    if (carrito.length === 0) {
       alert("No tienes productos en el carrito");
+      return;
     }
+    alert("Compra realizada con éxito!");
+    setCarrito([]);
+    localStorage.removeItem("carrito");
   };
 
-  // Confirmar cerrar sesión
-  const cerrarSesion = (e) => {
+  const handleCerrarSesion = (e) => {
     e.preventDefault();
     if (window.confirm("¿Estás seguro de que quieres cerrar sesión?")) {
       localStorage.removeItem("carrito");
-      window.location.href = "index.html";
+      window.location.href = "/";
     }
   };
 
-  // Calcular total
-  const total = carrito.reduce(
-    (acc, prod) => acc + prod.precio * prod.cantidad,
-    0
-  );
-
-  // Construir elementos con React.createElement (sin JSX)
-  return React.createElement(
-    React.Fragment,
-    null,
-    React.createElement(
-      "header",
-      null,
-      React.createElement("h1", null, "Tu Carrito"),
-      React.createElement(
-        "div",
-        {
-          style: {
+  return (
+    <>
+      <header style={{ position: "relative" }}>
+        <h1>Tu Carrito</h1>
+        <div
+          style={{
             position: "absolute",
             top: 10,
             right: 10,
             display: "flex",
             alignItems: "center",
             gap: 5,
-          },
-        },
-        React.createElement("span", null, "Bienvenido, User"),
-        React.createElement("img", {
-          src: "img/Perfil.png",
-          alt: "User Icon",
-          style: { width: 20, height: 20 },
-        })
-      ),
-      React.createElement(
-        "nav",
-        null,
-        React.createElement(
-          "ul",
-          null,
-          React.createElement(
-            "li",
-            null,
-            React.createElement("a", { href: "productos.html" }, "Seguir Comprando")
-          ),
-          React.createElement(
-            "li",
-            null,
-            React.createElement("a", { href: "dashboard.html" }, "Panel de Vendedor")
-          ),
-          React.createElement(
-            "li",
-            null,
-            React.createElement(
-              "a",
-              { href: "index.html", onClick: cerrarSesion, id: "cerrarSesion" },
-              "Cerrar Sesión"
-            )
-          )
-        )
-      )
-    ),
+          }}
+        >
+          <span>Bienvenido, User</span>
+          <img src={perfilImg} alt="User Icon" style={{ width: 20, height: 20 }} />
+        </div>
+        <nav>
+          <ul>
+            <li><a href="/productos">Seguir Comprando</a></li>
+            <li><a href="/dashboard">Panel de Vendedor</a></li>
+            <li><a href="/" onClick={handleCerrarSesion}>Cerrar Sesión</a></li>
+          </ul>
+        </nav>
+      </header>
 
-    React.createElement(
-      "section",
-      { className: "main" },
-      React.createElement(
-        "div",
-        { className: "carrito" },
-        React.createElement("h2", null, "Productos en tu carrito"),
-        React.createElement(
-          "div",
-          { id: "listaCarrito" },
-          carrito.length === 0
-            ? React.createElement("p", null, "No tienes productos en el carrito.")
-            : carrito.map((prod, idx) =>
-                React.createElement(
-                  "div",
-                  { className: "producto-carrito", key: idx },
-                  React.createElement("img", { src: prod.imagen, width: 60, alt: prod.nombre }),
-                  React.createElement("h4", null, prod.nombre),
-                  React.createElement("p", null, "$" + prod.precio),
-                  React.createElement(
-                    "div",
-                    { className: "cantidad" },
-                    React.createElement(
-                      "button",
-                      {
-                        className: "decrementar",
-                        onClick: () => decrementar(idx),
-                        "data-index": idx,
-                      },
-                      "-"
-                    ),
-                    React.createElement("span", { id: `cantidad-carrito-${idx}` }, prod.cantidad),
-                    React.createElement(
-                      "button",
-                      {
-                        className: "incrementar",
-                        onClick: () => incrementar(idx),
-                        "data-index": idx,
-                      },
-                      "+"
-                    )
-                  ),
-                  React.createElement(
-                    "button",
-                    {
-                      className: "eliminar",
-                      onClick: () => eliminar(idx),
-                      "data-index": idx,
-                    },
-                    "Eliminar"
-                  )
-                )
-              )
-        ),
-        React.createElement(
-          "h3",
-          null,
-          "Total: $",
-          React.createElement("span", { id: "total" }, total.toFixed(2))
-        ),
-        React.createElement(
-          "button",
-          { id: "comprar", onClick: comprar },
-          "Finalizar compra"
-        )
-      )
-    ),
+      <section className="main">
+        <div className="carrito">
+          <h2>Productos en tu carrito</h2>
+          {carrito.length === 0 ? (
+            <p>No tienes productos en el carrito.</p>
+          ) : (
+            carrito.map((prod, idx) => (
+              <div key={idx} className="producto-carrito">
+                <img src={prod.imagen} alt={prod.nombre} width="60" />
+                <h4>{prod.nombre}</h4>
+                <p>${prod.precio}</p>
+                <div className="cantidad">
+                  <button onClick={() => decrementar(idx)}>-</button>
+                  <span>{prod.cantidad}</span>
+                  <button onClick={() => incrementar(idx)}>+</button>
+                </div>
+                <button onClick={() => eliminar(idx)}>Eliminar</button>
+              </div>
+            ))
+          )}
+          <h3>Total: ${total}</h3>
+          <button onClick={comprar}>Finalizar compra</button>
+        </div>
+      </section>
 
-    React.createElement(
-      "footer",
-      null,
-      React.createElement(
-        "p",
-        null,
-        "\u00A9 2025 Marketplace EcuaLocal - Todos los derechos reservados"
-      )
-    )
+      <footer>
+        <p>&copy; 2025 Marketplace EcuaLocal - Todos los derechos reservados</p>
+      </footer>
+    </>
   );
-};
+}
 
 export default Carrito;

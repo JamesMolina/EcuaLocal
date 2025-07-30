@@ -21,8 +21,8 @@ function Index() {
           <ul>
             <li><a href="/login">Iniciar Sesión</a></li>
             <li><a href="/signup">Registrarse</a></li>
-            <li><a href="#" onClick={handleProtectedClick}>Ver Productos</a></li>
-            <li><a href="#" onClick={handleProtectedClick}>Panel de Vendedor</a></li>
+            <li><a href="/productos" onClick={handleProtectedClick}>Ver Productos</a></li>
+            <li><a href="/dashboard" onClick={handleProtectedClick}>Panel de Vendedor</a></li>
           </ul>
         </nav>
       </header>

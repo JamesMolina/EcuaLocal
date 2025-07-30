@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import perfilImg from "../../img/Perfil.png";
 import "../css/productos.css";
 
 const Productos = () => {
-  // Estado productos y productos filtrados
+  const navigate = useNavigate();
+
   const [productos, setProductos] = useState(() => {
-    // Cargar productos del localStorage (o usa [] si no hay)
     return JSON.parse(localStorage.getItem("productos")) || [];
   });
 
   const [productosFiltrados, setProductosFiltrados] = useState(productos);
 
-  // Estados para filtros
   const [categoria, setCategoria] = useState("todos");
   const [estado, setEstado] = useState("todos");
   const [precioMax, setPrecioMax] = useState("");
   const [nombre, setNombre] = useState("");
 
-  // Manejo cantidades por producto (objeto índice => cantidad)
   const [cantidades, setCantidades] = useState(() => {
     const initial = {};
     productos.forEach((_, idx) => {
@@ -25,12 +25,10 @@ const Productos = () => {
     return initial;
   });
 
-  // Actualizar localStorage cuando cambia productos (opcional)
   useEffect(() => {
     localStorage.setItem("productos", JSON.stringify(productos));
   }, [productos]);
 
-  // Función para mostrar productos filtrados
   useEffect(() => {
     const filtrados = productos.filter((p) => {
       return (
@@ -43,7 +41,6 @@ const Productos = () => {
     setProductosFiltrados(filtrados);
   }, [categoria, estado, precioMax, nombre, productos]);
 
-  // Funciones para manejar cantidad
   const incrementar = (idx) => {
     setCantidades((prev) => ({
       ...prev,
@@ -58,7 +55,6 @@ const Productos = () => {
     }));
   };
 
-  // Mostrar/Ocultar detalles (estado local para cada producto)
   const [detallesVisibles, setDetallesVisibles] = useState({});
 
   const toggleDetalles = (idx) => {
@@ -68,7 +64,6 @@ const Productos = () => {
     }));
   };
 
-  // Añadir producto al carrito en localStorage
   const agregarAlCarrito = (idx) => {
     let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
     const producto = {
@@ -80,21 +75,19 @@ const Productos = () => {
     alert("Producto añadido al carrito!");
   };
 
-  // Confirmación cerrar sesión
   const cerrarSesion = (e) => {
     e.preventDefault();
     if (window.confirm("¿Estás seguro de que quieres cerrar sesión?")) {
       localStorage.removeItem("carrito");
-      window.location.href = "index.html";
+      navigate("/");
     }
   };
 
-  // Confirmación ir a inicio
   const irInicio = (e) => {
     e.preventDefault();
     if (window.confirm("Al ir a la página de inicio, se cerrará su sesión. ¿Deseas continuar?")) {
       localStorage.removeItem("carrito");
-      window.location.href = "index.html";
+      navigate("/");
     }
   };
 
@@ -113,41 +106,21 @@ const Productos = () => {
           }}
         >
           <span>Bienvenido, User</span>
-          <img
-            src="img/Perfil.png"
-            alt="User Icon"
-            style={{ width: 20, height: 20 }}
-          />
+          <img src={perfilImg} alt="User Icon" style={{ width: 20, height: 20 }} />
         </div>
         <nav>
           <ul>
-            <li>
-              <a href="index.html" onClick={irInicio} id="inicio">
-                Inicio
-              </a>
-            </li>
-            <li>
-              <a href="carrito.html">Carrito</a>
-            </li>
-            <li>
-              <a href="dashboard.html">Panel de Vendedor</a>
-            </li>
-            <li>
-              <a href="index.html" onClick={cerrarSesion} id="cerrarSesion">
-                Cerrar Sesión
-              </a>
-            </li>
+            <li><a href="/" onClick={irInicio}>Inicio</a></li>
+            <li><a href="/carrito">Carrito</a></li>
+            <li><a href="/dashboard">Panel de Vendedor</a></li>
+            <li><a href="/" onClick={cerrarSesion}>Cerrar Sesión</a></li>
           </ul>
         </nav>
       </header>
 
       <section className="filtros">
         <label htmlFor="categoria">Categoría:</label>
-        <select
-          id="categoria"
-          value={categoria}
-          onChange={(e) => setCategoria(e.target.value)}
-        >
+        <select id="categoria" value={categoria} onChange={(e) => setCategoria(e.target.value)}>
           <option value="todos">Todos</option>
           <option value="electronica">Electrónica</option>
           <option value="ropa">Ropa</option>
@@ -156,11 +129,7 @@ const Productos = () => {
         </select>
 
         <label htmlFor="estado">Estado:</label>
-        <select
-          id="estado"
-          value={estado}
-          onChange={(e) => setEstado(e.target.value)}
-        >
+        <select id="estado" value={estado} onChange={(e) => setEstado(e.target.value)}>
           <option value="todos">Todos</option>
           <option value="nuevo">Nuevo</option>
           <option value="usado">Usado</option>
@@ -184,9 +153,7 @@ const Productos = () => {
           onChange={(e) => setNombre(e.target.value)}
         />
 
-        <button id="filtrar" onClick={() => { /* filtro se actualiza automático */ }}>
-          Filtrar
-        </button>
+        <button id="filtrar">Filtrar</button>
       </section>
 
       <section className="productos-lista" id="contenedorProductos">
@@ -199,35 +166,18 @@ const Productos = () => {
               <h4>{prod.nombre}</h4>
               <p>${prod.precio}</p>
               <div className="cantidad">
-                <button
-                  className="decrementar"
-                  onClick={() => decrementar(idx)}
-                >
-                  -
-                </button>
-                <span id={`cantidad-${idx}`}>{cantidades[idx]}</span>
-                <button
-                  className="incrementar"
-                  onClick={() => incrementar(idx)}
-                >
-                  +
-                </button>
+                <button onClick={() => decrementar(idx)}>-</button>
+                <span>{cantidades[idx]}</span>
+                <button onClick={() => incrementar(idx)}>+</button>
               </div>
-              <button className="add-carrito" onClick={() => agregarAlCarrito(idx)}>
-                Añadir al carrito
-              </button>
-              <button className="detalles" onClick={() => toggleDetalles(idx)}>
+              <button onClick={() => agregarAlCarrito(idx)}>Añadir al carrito</button>
+              <button onClick={() => toggleDetalles(idx)}>
                 {detallesVisibles[idx] ? "Ocultar detalles" : "Ver detalles"}
               </button>
               {detallesVisibles[idx] && (
-                <div className="detalles-info" id={`detalles-${idx}`}>
-                  <p>
-                    <strong>Categoría:</strong>{" "}
-                    {prod.categoria.charAt(0).toUpperCase() + prod.categoria.slice(1)}
-                  </p>
-                  <p>
-                    <strong>Descripción:</strong>
-                  </p>
+                <div className="detalles-info">
+                  <p><strong>Categoría:</strong> {prod.categoria}</p>
+                  <p><strong>Descripción:</strong></p>
                   <p dangerouslySetInnerHTML={{ __html: prod.descripcion.replace(/\n/g, "<br>") }} />
                 </div>
               )}
