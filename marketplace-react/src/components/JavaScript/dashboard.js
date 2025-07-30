@@ -1,4 +1,6 @@
+
 import React, { useState, useEffect } from "react";
+import perfilImg from "../../img/Perfil.png";
 
 
 function Dashboard() {
@@ -96,7 +98,7 @@ function Dashboard() {
         <h1>Panel de Vendedor</h1>
         <div style={{ position: 'absolute', top: 10, right: 10, display: 'flex', alignItems: 'center', gap: 5 }}>
           <span>Bienvenido, User</span>
-          <img src={require("../../../../img/Perfil.png")} alt="User Icon" style={{ width: 20, height: 20 }} />
+          <img src={perfilImg} alt="User Icon" style={{ width: 20, height: 20 }} />
         </div>
         <nav>
           <ul>
