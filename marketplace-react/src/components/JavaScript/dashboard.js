@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import perfilImg from "../../img/Perfil.png";
+import "../css/dashboard.css";
 
 
 function Dashboard() {
