@@ -1,4 +1,4 @@
-
+/* ==== Estilos base ==== */
 body {
     font-family: 'Poppins', Arial, sans-serif;
     background: linear-gradient(135deg, #f8fafc 0%, #e0e7ef 100%);
@@ -10,7 +10,7 @@ body {
     min-height: 100vh;
 }
 
-
+/* ==== Header ==== */
 header {
     background: linear-gradient(90deg, #1d3557 60%, #457b9d 100%);
     color: #fff;
@@ -19,37 +19,18 @@ header {
     box-shadow: 0 4px 16px rgba(29,53,87,0.08);
     border-bottom-left-radius: 18px;
     border-bottom-right-radius: 18px;
-    width: 100vw;
-    inset: inherit;
+    width: 100%;
 }
-
-
-footer {
-    text-align: center;
-    color: #457b9d;
-    font-size: 1rem;
-    padding: 18px 0 8px 0;
-    background: none;
-    margin-top: auto;
-}
-
-
 
 header nav ul {
     list-style: none;
     padding: 0;
-    margin: 0;
+    margin: 12px 0 0 0;
     display: flex;
     justify-content: center;
     gap: 18px;
+    flex-wrap: wrap;
 }
-
-
-header nav ul li {
-    display: inline-block;
-    margin: 0 10px;
-}
-
 
 header nav ul li a {
     color: #fff;
@@ -58,89 +39,154 @@ header nav ul li a {
     font-size: 1.08rem;
     padding: 6px 16px;
     border-radius: 6px;
-    transition: background 0.2s, color 0.2s;
+    transition: all 0.2s ease-in-out;
 }
+
 header nav ul li a:hover {
     background: #a8dadc;
     color: #1d3557;
 }
 
+/* ==== Footer ==== */
+footer {
+    text-align: center;
+    color: #457b9d;
+    font-size: 1rem;
+    padding: 18px 0 8px 0;
+    margin-top: auto;
+}
 
+/* ==== Contenedor Carrito ==== */
 .carrito {
-    max-width: 600px;
+    max-width: 750px;
     margin: 28px auto 20px auto;
-    padding: 28px 20px 20px 20px;
+    padding: 28px 20px;
     background: #fff;
     border-radius: 14px;
     box-shadow: 0 6px 24px rgba(29,53,87,0.10);
 }
 
+.carrito h2 {
+    text-align: center;
+    font-size: 1.8rem;
+    color: #1d3557;
+    margin-bottom: 25px;
+}
 
+/* ==== Producto en el carrito ==== */
 .producto-carrito {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
     gap: 15px;
     background: #fff;
-    padding: 18px 15px 15px 15px;
+    padding: 15px;
     margin: 12px 0;
     border-radius: 12px;
     box-shadow: 0 4px 16px rgba(29,53,87,0.10);
-    transition: box-shadow 0.2s, transform 0.15s;
+    transition: all 0.2s ease;
 }
+
 .producto-carrito:hover {
     box-shadow: 0 8px 32px rgba(29,53,87,0.13);
     transform: translateY(-2px) scale(1.02);
 }
 
-.producto-carrito > * {
-    flex: 1;
-    text-align: center;
+.producto-carrito img {
+    border-radius: 8px;
+    max-width: 60px;
 }
 
-
+/* ==== Botones Generales ==== */
 button {
     background: linear-gradient(90deg, #e63946 60%, #f3722c 100%);
     color: #fff;
-    padding: 11px 26px;
+    padding: 10px 22px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 600;
     box-shadow: 0 2px 8px rgba(230,57,70,0.08);
-    transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
-    margin-top: 12px;
+    transition: all 0.2s ease;
 }
+
 button:hover {
     background: linear-gradient(90deg, #d62828 60%, #f3722c 100%);
     box-shadow: 0 4px 16px rgba(230,57,70,0.13);
     transform: translateY(-2px) scale(1.03);
 }
 
-
+/* ==== Botones de cantidad ==== */
 .cantidad {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
-    margin-top: 10px;
 }
+
 .cantidad button {
     background: #1d3557;
     color: white;
-    border: none;
-    padding: 7px 14px;
+    padding: 6px 14px;
     border-radius: 6px;
-    cursor: pointer;
     font-size: 1rem;
-    font-weight: 600;
-    transition: background 0.2s;
 }
+
 .cantidad button:hover {
     background: #457b9d;
 }
+
 .cantidad span {
-    font-size: 18px;
+    font-size: 1rem;
     font-weight: bold;
+}
+
+/* ==== Botón eliminar ==== */
+.eliminar {
+    background: #e63946 !important;
+    padding: 6px 14px;
+}
+
+.eliminar:hover {
+    background: #d62828 !important;
+}
+
+/* ==== Total ==== */
+.carrito-total {
+    text-align: right;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #1d3557;
+    margin-top: 15px;
+}
+
+/* ==== Botón comprar ==== */
+#comprar {
+    display: block;
+    width: 100%;
+    background: linear-gradient(90deg, #06d6a0 60%, #118ab2 100%);
+    padding: 12px;
+    font-size: 1rem;
+}
+
+#comprar:hover {
+    background: linear-gradient(90deg, #05b383 60%, #0f6f91 100%);
+}
+
+/* ==== Responsive ==== */
+@media (max-width: 600px) {
+    .producto-carrito {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .producto-carrito img {
+        max-width: 100px;
+    }
+
+    .cantidad {
+        margin-top: 8px;
+    }
 }

@@ -103,10 +103,11 @@ const Productos = () => {
             display: "flex",
             alignItems: "center",
             gap: 5,
+            zIndex: 100,
           }}
         >
           <span>Bienvenido, User</span>
-          <img src={perfilImg} alt="User Icon" style={{ width: 20, height: 20 }} />
+          <img src={perfilImg} alt="User Icon" style={{ width: 20, height: 20, borderRadius: "50%" }} />
         </div>
         <nav>
           <ul>
@@ -158,12 +159,12 @@ const Productos = () => {
 
       <section className="productos-lista" id="contenedorProductos">
         {productosFiltrados.length === 0 ? (
-          <p>No se encontraron productos.</p>
+          <p id="mensajeVacio">No se encontraron productos.</p>
         ) : (
           productosFiltrados.map((prod, idx) => (
             <div className="producto" key={idx}>
               <img src={prod.imagen} alt={prod.nombre} />
-              <h4>{prod.nombre}</h4>
+              <h3>{prod.nombre}</h3>
               <p>${prod.precio}</p>
               <div className="cantidad">
                 <button onClick={() => decrementar(idx)}>-</button>
@@ -171,7 +172,7 @@ const Productos = () => {
                 <button onClick={() => incrementar(idx)}>+</button>
               </div>
               <button onClick={() => agregarAlCarrito(idx)}>Añadir al carrito</button>
-              <button onClick={() => toggleDetalles(idx)}>
+              <button className="detalles" onClick={() => toggleDetalles(idx)}>
                 {detallesVisibles[idx] ? "Ocultar detalles" : "Ver detalles"}
               </button>
               {detallesVisibles[idx] && (

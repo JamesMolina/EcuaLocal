@@ -14,7 +14,10 @@ function Carrito() {
 
   // Calcular total cada vez que cambia el carrito
   useEffect(() => {
-    const nuevoTotal = carrito.reduce((acc, prod) => acc + prod.precio * prod.cantidad, 0);
+    const nuevoTotal = carrito.reduce(
+      (acc, prod) => acc + prod.precio * prod.cantidad,
+      0
+    );
     setTotal(nuevoTotal);
     localStorage.setItem("carrito", JSON.stringify(carrito));
   }, [carrito]);
@@ -34,7 +37,9 @@ function Carrito() {
   };
 
   const eliminar = (idx) => {
-    setCarrito((prev) => prev.filter((_, i) => i !== idx));
+    if (window.confirm("¿Seguro que deseas eliminar este producto?")) {
+      setCarrito((prev) => prev.filter((_, i) => i !== idx));
+    }
   };
 
   const comprar = () => {
@@ -42,7 +47,7 @@ function Carrito() {
       alert("No tienes productos en el carrito");
       return;
     }
-    alert("Compra realizada con éxito!");
+    alert("Compra realizada con éxito ✅");
     setCarrito([]);
     localStorage.removeItem("carrito");
   };
@@ -58,7 +63,7 @@ function Carrito() {
   return (
     <>
       <header style={{ position: "relative" }}>
-        <h1>Tu Carrito</h1>
+        <h1>🛒 Tu Carrito</h1>
         <div
           style={{
             position: "absolute",
@@ -74,9 +79,17 @@ function Carrito() {
         </div>
         <nav>
           <ul>
-            <li><a href="/productos">Seguir Comprando</a></li>
-            <li><a href="/dashboard">Panel de Vendedor</a></li>
-            <li><a href="/" onClick={handleCerrarSesion}>Cerrar Sesión</a></li>
+            <li>
+              <a href="/productos">Seguir Comprando</a>
+            </li>
+            <li>
+              <a href="/dashboard">Panel de Vendedor</a>
+            </li>
+            <li>
+              <a href="/" onClick={handleCerrarSesion}>
+                Cerrar Sesión
+              </a>
+            </li>
           </ul>
         </nav>
       </header>
@@ -84,25 +97,36 @@ function Carrito() {
       <section className="main">
         <div className="carrito">
           <h2>Productos en tu carrito</h2>
+
           {carrito.length === 0 ? (
             <p>No tienes productos en el carrito.</p>
           ) : (
             carrito.map((prod, idx) => (
               <div key={idx} className="producto-carrito">
-                <img src={prod.imagen} alt={prod.nombre} width="60" />
+                <img src={prod.imagen} alt={prod.nombre} />
                 <h4>{prod.nombre}</h4>
                 <p>${prod.precio}</p>
+
                 <div className="cantidad">
                   <button onClick={() => decrementar(idx)}>-</button>
                   <span>{prod.cantidad}</span>
                   <button onClick={() => incrementar(idx)}>+</button>
                 </div>
-                <button onClick={() => eliminar(idx)}>Eliminar</button>
+
+                <button className="eliminar" onClick={() => eliminar(idx)}>
+                  Eliminar
+                </button>
               </div>
             ))
           )}
-          <h3>Total: ${total}</h3>
-          <button onClick={comprar}>Finalizar compra</button>
+
+          <div className="carrito-total">
+            <p>Total: ${total.toFixed(2)}</p>
+          </div>
+
+          <button id="comprar" onClick={comprar}>
+            Finalizar compra
+          </button>
         </div>
       </section>
 
