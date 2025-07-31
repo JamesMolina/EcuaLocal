@@ -132,7 +132,7 @@ function Dashboard() {
               <Link to="/" onClick={handleInicio}>Inicio</Link>
             </li>
             <li>
-              <Link to="/productos">Mis Productos</Link>
+              <Link to="/productos">Productos</Link>
             </li>
             <li>
               <Link to="/carrito">Carrito</Link>
