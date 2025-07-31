@@ -64,20 +64,22 @@ const Productos = () => {
     alert("Producto añadido al carrito 🛒");
   };
 
-  const cerrarSesion = (e) => {
-    e.preventDefault();
-    if (window.confirm("¿Estás seguro de que quieres cerrar sesión?")) {
-      navigate("/");
-    }
-  };
+const cerrarSesion = (e) => {
+  e.preventDefault();
+  console.log("[DEBUG] Botón Cerrar Sesión PRESIONADO");
+  console.log("[DEBUG] Productos en localStorage ANTES de cerrar sesión:", JSON.parse(localStorage.getItem("productos")));
+  console.log("[DEBUG] Carrito en localStorage ANTES de cerrar sesión:", JSON.parse(localStorage.getItem("carrito")));
+
+  if (window.confirm("¿Estás seguro de que quieres cerrar sesión?")) {
+    console.log("[DEBUG] Redirigiendo a /");
+    navigate("/");
+  }
+};
+
 
   const irInicio = (e) => {
     e.preventDefault();
-    if (
-      window.confirm(
-        "Al ir a la página de inicio, se cerrará su sesión. ¿Deseas continuar?"
-      )
-    ) {
+    if (window.confirm("Al ir a la página de inicio, se cerrará su sesión. ¿Deseas continuar?")) {
       navigate("/");
     }
   };
