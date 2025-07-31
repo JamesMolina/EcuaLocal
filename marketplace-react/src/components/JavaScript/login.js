@@ -3,6 +3,17 @@ import { useNavigate } from "react-router-dom";
 import "../css/login.css";
 
 const Login = () => {
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Aquí puedes hacer validaciones si deseas
+    alert("Inicio de sesión exitoso");
+
+    navigate("/productos");
+  };
+
   return (
     <>
       <header>
@@ -11,7 +22,7 @@ const Login = () => {
 
       <section className="login-container">
         <h2>Inicia sesión</h2>
-        <form id="loginForm">
+        <form onSubmit={handleSubmit}>
           <label htmlFor="email">Correo electrónico:</label>
           <input type="email" id="email" name="email" required />
           <span className="error" id="emailError"></span>
