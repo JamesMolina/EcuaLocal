@@ -6,9 +6,16 @@ function Signup() {
   const navigate = useNavigate();
   const [tipoUsuario, setTipoUsuario] = useState("natural");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [strengthText, setStrengthText] = useState("Muy débil");
   const [strengthColor, setStrengthColor] = useState("red");
   const [strengthWidth, setStrengthWidth] = useState("0%");
+  const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [nombreNegocio, setNombreNegocio] = useState("");
+  const [ruc, setRuc] = useState("");
+  const [nombreNegocioError, setNombreNegocioError] = useState("");
+  const [rucError, setRucError] = useState("");
 
   const handleTipoUsuarioChange = (e) => {
     setTipoUsuario(e.target.value);
@@ -57,7 +64,44 @@ function Signup() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // ...Puedes agregar validaciones aquí si quieres
+    let valid = true;
+
+    if (password.length < 6) {
+      setPasswordError("La contraseña debe tener mínimo 6 caracteres");
+      valid = false;
+    } else {
+      setPasswordError("");
+    }
+
+    if (password !== confirmPassword) {
+      setConfirmPasswordError("Las contraseñas no coinciden");
+      valid = false;
+    } else {
+      setConfirmPasswordError("");
+    }
+
+    if (tipoUsuario === "juridico") {
+      if (!nombreNegocio.trim()) {
+        setNombreNegocioError("El nombre del negocio es obligatorio");
+        valid = false;
+      } else {
+        setNombreNegocioError("");
+      }
+      if (!ruc.trim()) {
+        setRucError("El RUC o razón social es obligatorio");
+        valid = false;
+      } else if (!/^\d{10}001$/.test(ruc.trim())) {
+        setRucError("El RUC debe de ser su número de cédula seguido de 001 Ej: 1399999999001");
+        valid = false;
+      } else {
+        setRucError("");
+      }
+    } else {
+      setNombreNegocioError("");
+      setRucError("");
+    }
+
+    if (!valid) return;
 
     alert("¡Registro exitoso!");
     navigate("/productos");
@@ -87,6 +131,9 @@ function Signup() {
             onChange={handlePasswordChange}
             required
           />
+          {passwordError && (
+            <span className="error" style={{ color: "red" }}>{passwordError}</span>
+          )}
 
           <div id="strengthMeter">
             <div
@@ -105,7 +152,17 @@ function Signup() {
           <br />
 
           <label htmlFor="confirmPassword">Confirmar Contraseña:</label>
-          <input type="password" id="confirmPassword" name="confirmPassword" />
+          <input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            value={confirmPassword}
+            onChange={e => setConfirmPassword(e.target.value)}
+            required
+          />
+          {confirmPasswordError && (
+            <span className="error" style={{ color: "red" }}>{confirmPasswordError}</span>
+          )}
 
           <label htmlFor="tipoUsuario">Tipo de Usuario:</label>
           <select
@@ -121,10 +178,31 @@ function Signup() {
           {tipoUsuario === "juridico" && (
             <>
               <label htmlFor="nombreNegocio">Nombre de tu negocio:</label>
-              <input type="text" id="nombreNegocio" name="nombreNegocio" />
+              <input
+                type="text"
+                id="nombreNegocio"
+                name="nombreNegocio"
+                value={nombreNegocio}
+                onChange={e => setNombreNegocio(e.target.value)}
+                required
+              />
+              {nombreNegocioError && (
+                <span className="error" style={{ color: "red" }}>{nombreNegocioError}</span>
+              )}
 
               <label htmlFor="ruc">RUC o razón social:</label>
-              <input type="text" id="ruc" name="ruc" maxLength="13" />
+              <input
+                type="text"
+                id="ruc"
+                name="ruc"
+                maxLength="13"
+                value={ruc}
+                onChange={e => setRuc(e.target.value)}
+                required
+              />
+              {rucError && (
+                <span className="error" style={{ color: "red" }}>{rucError}</span>
+              )}
             </>
           )}
 

@@ -1,17 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../css/login.css";
 
 const Login = () => {
   const navigate = useNavigate();
+  const [passwordError, setPasswordError] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Aquí puedes hacer validaciones si deseas
-    alert("Inicio de sesión exitoso");
+    const email = e.target.email.value;
+    const password = e.target.password.value;
 
-    navigate("/productos");
+    if (password.length < 6) {
+      setPasswordError("La contraseña debe tener mínimo 6 caracteres");
+      return;
+    } else {
+      setPasswordError("");
+    }
+
+    if (email === "prueba@hotmail.com" && password === "PR1234") {
+      alert("Inicio de sesión exitoso");
+      navigate("/productos");
+    } else {
+      alert("Correo o contraseña incorrectos");
+    }
   };
 
   return (
@@ -27,9 +40,12 @@ const Login = () => {
           <input type="email" id="email" name="email" required />
           <span className="error" id="emailError"></span>
 
+
           <label htmlFor="password">Contraseña:</label>
           <input type="password" id="password" name="password" required />
-          <span className="error" id="passwordError"></span>
+          {passwordError && (
+            <span className="error" style={{ color: "red" }}>{passwordError}</span>
+          )}
 
           <span className="error" id="userError"></span>
           <button type="submit">Entrar</button>
