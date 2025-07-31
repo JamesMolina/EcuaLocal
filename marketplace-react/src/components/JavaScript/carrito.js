@@ -7,7 +7,7 @@ import { MarketplaceContext } from "./MarketplaceContext";
 function Carrito() {
   const navigate = useNavigate();
   const { carrito, actualizarCantidad, eliminarProductoCarrito, vaciarCarrito } = useContext(MarketplaceContext);
-  const [usuario] = useState("User"); // Aquí podrías integrar un estado real de usuario luego
+  const [usuario] = useState("User");
 
   const total = carrito.reduce((acc, prod) => acc + prod.precio * prod.cantidad, 0);
 
@@ -21,12 +21,11 @@ function Carrito() {
   };
 
   const handleCerrarSesion = (e) => {
-    e.preventDefault();
-    if (window.confirm("¿Estás seguro de que quieres cerrar sesión?")) {
-      vaciarCarrito();
-      navigate("/");
-    }
-  };
+  e.preventDefault();
+  if (window.confirm("¿Estás seguro de que quieres cerrar sesión?")) {
+    navigate("/"); // Solo redirige, no vacía nada
+  }
+};
 
   return (
     <>

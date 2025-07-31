@@ -93,21 +93,19 @@ function Dashboard() {
     }
   };
 
-  const handleCerrarSesion = (e) => {
-    e.preventDefault();
-    if (window.confirm("¿Estás seguro de que quieres cerrar sesión?")) {
-      vaciarCarrito();
-      navigate("/");
-    }
-  };
+const handleCerrarSesion = (e) => {
+  e.preventDefault();
+  if (window.confirm("¿Estás seguro de que quieres cerrar sesión?")) {
+    navigate("/");
+  }
+};
 
-  const handleInicio = (e) => {
-    e.preventDefault();
-    if (window.confirm("Al ir a la página de inicio, se cerrará su sesión. ¿Deseas continuar?")) {
-      vaciarCarrito();
-      navigate("/");
-    }
-  };
+const handleInicio = (e) => {
+  e.preventDefault();
+  if (window.confirm("Al ir a la página de inicio, se cerrará su sesión. ¿Deseas continuar?")) {
+    navigate("/");
+  }
+};
 
   return (
     <>

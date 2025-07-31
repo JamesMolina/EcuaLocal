@@ -4,7 +4,7 @@ import React, { createContext, useState, useEffect } from "react";
 export const MarketplaceContext = createContext();
 
 export const MarketplaceProvider = ({ children }) => {
-
+  // ------------------ Productos ------------------
   const [productos, setProductos] = useState([]);
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export const MarketplaceProvider = ({ children }) => {
     setProductos((prev) => prev.filter((p) => p.id !== id));
   };
 
-
+  // ------------------ Carrito ------------------
   const [carrito, setCarrito] = useState([]);
 
   useEffect(() => {
@@ -38,12 +38,10 @@ export const MarketplaceProvider = ({ children }) => {
     setCarrito(cart);
   }, []);
 
-
   useEffect(() => {
     localStorage.setItem("carrito", JSON.stringify(carrito));
   }, [carrito]);
 
- 
   const agregarProductoCarrito = (producto, cantidad = 1) => {
     setCarrito((prev) => {
       const existe = prev.find((p) => p.id === producto.id);
@@ -58,7 +56,6 @@ export const MarketplaceProvider = ({ children }) => {
     });
   };
 
-
   const actualizarCantidad = (id, cantidad) => {
     if (cantidad <= 0) return;
     setCarrito((prev) =>
@@ -66,12 +63,11 @@ export const MarketplaceProvider = ({ children }) => {
     );
   };
 
-
   const eliminarProductoCarrito = (id) => {
     setCarrito((prev) => prev.filter((p) => p.id !== id));
   };
 
-
+  // Esta función ahora SOLO se usará en "Finalizar compra"
   const vaciarCarrito = () => {
     setCarrito([]);
   };
@@ -79,13 +75,13 @@ export const MarketplaceProvider = ({ children }) => {
   return (
     <MarketplaceContext.Provider
       value={{
-        
+        // Productos
         productos,
         agregarProducto,
         editarProducto,
         eliminarProducto,
 
-        
+        // Carrito
         carrito,
         agregarProductoCarrito,
         actualizarCantidad,

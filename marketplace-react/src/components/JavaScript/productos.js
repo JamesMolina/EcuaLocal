@@ -7,8 +7,9 @@ import { MarketplaceContext } from "./MarketplaceContext";
 const Productos = () => {
   const navigate = useNavigate();
   const { productos, agregarProductoCarrito } = useContext(MarketplaceContext);
-  const [usuario] = useState("User"); // Puedes reemplazar con estado real de usuario
+  const [usuario] = useState("User");
 
+  //Filtros
   const [productosFiltrados, setProductosFiltrados] = useState([]);
   const [categoria, setCategoria] = useState("todos");
   const [estado, setEstado] = useState("todos");
@@ -63,6 +64,7 @@ const Productos = () => {
     alert("Producto añadido al carrito 🛒");
   };
 
+  //Cerrar sesión
   const cerrarSesion = (e) => {
     e.preventDefault();
     if (window.confirm("¿Estás seguro de que quieres cerrar sesión?")) {
@@ -70,6 +72,7 @@ const Productos = () => {
     }
   };
 
+  //Ir a Inicio
   const irInicio = (e) => {
     e.preventDefault();
     if (window.confirm("Al ir a la página de inicio, se cerrará su sesión. ¿Deseas continuar?")) {
@@ -77,6 +80,7 @@ const Productos = () => {
     }
   };
 
+  // Render html
   return (
     <>
       <header>
@@ -152,8 +156,6 @@ const Productos = () => {
           value={nombre}
           onChange={(e) => setNombre(e.target.value)}
         />
-
-        {/* El botón filtrar no es necesario porque el filtrado es reactivo */}
       </section>
 
       <section className="productos-lista">
