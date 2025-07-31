@@ -9,7 +9,7 @@ const Productos = () => {
   const { productos, agregarProductoCarrito } = useContext(MarketplaceContext);
   const [usuario] = useState("User");
 
-  //Filtros
+  // Filtros
   const [productosFiltrados, setProductosFiltrados] = useState([]);
   const [categoria, setCategoria] = useState("todos");
   const [estado, setEstado] = useState("todos");
@@ -64,7 +64,6 @@ const Productos = () => {
     alert("Producto añadido al carrito 🛒");
   };
 
-  //Cerrar sesión
   const cerrarSesion = (e) => {
     e.preventDefault();
     if (window.confirm("¿Estás seguro de que quieres cerrar sesión?")) {
@@ -72,119 +71,110 @@ const Productos = () => {
     }
   };
 
-  //Ir a Inicio
   const irInicio = (e) => {
     e.preventDefault();
-    if (window.confirm("Al ir a la página de inicio, se cerrará su sesión. ¿Deseas continuar?")) {
+    if (
+      window.confirm(
+        "Al ir a la página de inicio, se cerrará su sesión. ¿Deseas continuar?"
+      )
+    ) {
       navigate("/");
     }
   };
 
-  // Render html
   return (
-    <>
+    <div className="productos-page">
       <header>
         <h1>Productos en Venta</h1>
-        <div
-          style={{
-            position: "absolute",
-            top: 10,
-            right: 10,
-            display: "flex",
-            alignItems: "center",
-            gap: 5,
-          }}
-        >
+        <div className="usuario-info">
           <span>Bienvenido, {usuario}</span>
-          <img
-            src={perfilImg}
-            alt="User Icon"
-            style={{ width: 20, height: 20, borderRadius: "50%" }}
-          />
+          <img src={perfilImg} alt="User Icon" className="perfil-img" />
         </div>
         <nav>
           <ul>
-            <li>
-              <a href="/" onClick={irInicio}>
-                Inicio
-              </a>
-            </li>
-            <li>
-              <Link to="/carrito">Carrito</Link>
-            </li>
-            <li>
-              <Link to="/dashboard">Panel de Vendedor</Link>
-            </li>
-            <li>
-              <a href="/" onClick={cerrarSesion}>
-                Cerrar Sesión
-              </a>
-            </li>
+            <li><a href="/" onClick={irInicio}>Inicio</a></li>
+            <li><Link to="/carrito">Carrito</Link></li>
+            <li><Link to="/dashboard">Panel de Vendedor</Link></li>
+            <li><a href="/" onClick={cerrarSesion}>Cerrar Sesión</a></li>
           </ul>
         </nav>
       </header>
 
+      {/* ====== FILTROS ====== */}
       <section className="filtros">
-        <label htmlFor="categoria">Categoría:</label>
-        <select id="categoria" value={categoria} onChange={(e) => setCategoria(e.target.value)}>
-          <option value="todos">Todos</option>
-          <option value="electronica">Electrónica</option>
-          <option value="ropa">Ropa</option>
-          <option value="hogar">Hogar</option>
-          <option value="alimentos">Alimentos</option>
-        </select>
-
-        <label htmlFor="estado">Estado:</label>
-        <select id="estado" value={estado} onChange={(e) => setEstado(e.target.value)}>
-          <option value="todos">Todos</option>
-          <option value="nuevo">Nuevo</option>
-          <option value="usado">Usado</option>
-        </select>
-
-        <label htmlFor="precio">Precio máximo:</label>
-        <input
-          type="number"
-          id="precio"
-          value={precioMax}
-          onChange={(e) => setPrecioMax(e.target.value)}
-        />
-
-        <label htmlFor="nombre">Nombre:</label>
-        <input
-          type="text"
-          id="nombre"
-          value={nombre}
-          onChange={(e) => setNombre(e.target.value)}
-        />
+        <div>
+          <label htmlFor="categoria">Categoría:</label>
+          <select id="categoria" value={categoria} onChange={(e) => setCategoria(e.target.value)}>
+            <option value="todos">Todos</option>
+            <option value="electronica">Electrónica</option>
+            <option value="ropa">Ropa</option>
+            <option value="hogar">Hogar</option>
+            <option value="alimentos">Alimentos</option>
+          </select>
+        </div>
+        <div>
+          <label htmlFor="estado">Estado:</label>
+          <select id="estado" value={estado} onChange={(e) => setEstado(e.target.value)}>
+            <option value="todos">Todos</option>
+            <option value="nuevo">Nuevo</option>
+            <option value="usado">Usado</option>
+          </select>
+        </div>
+        <div>
+          <label htmlFor="precio">Precio máximo:</label>
+          <input
+            type="number"
+            id="precio"
+            placeholder="Ej: 100"
+            value={precioMax}
+            onChange={(e) => setPrecioMax(e.target.value)}
+          />
+        </div>
+        <div>
+          <label htmlFor="nombre">Nombre:</label>
+          <input
+            type="text"
+            id="nombre"
+            placeholder="Buscar producto..."
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+          />
+        </div>
       </section>
 
+      {/* ====== LISTA DE PRODUCTOS ====== */}
       <section className="productos-lista">
         {productosFiltrados.length === 0 ? (
-          <p>No se encontraron productos.</p>
+          <p id="mensajeVacio">No se encontraron productos.</p>
         ) : (
           productosFiltrados.map((prod) => (
             <div className="producto" key={prod.id}>
               <img src={prod.imagen} alt={prod.nombre} />
               <h3>{prod.nombre}</h3>
               <p>${prod.precio}</p>
+
               <div className="cantidad">
                 <button onClick={() => decrementar(prod.id)}>-</button>
                 <span>{cantidades[prod.id]}</span>
                 <button onClick={() => incrementar(prod.id)}>+</button>
               </div>
+
               <button onClick={() => handleAgregar(prod)}>Añadir al carrito</button>
-              <button className="detalles" onClick={() => toggleDetalles(prod.id)}>
+
+              <button
+                className="detalles"
+                onClick={() => toggleDetalles(prod.id)}
+              >
                 {detallesVisibles[prod.id] ? "Ocultar detalles" : "Ver detalles"}
               </button>
+
               {detallesVisibles[prod.id] && (
                 <div className="detalles-info">
-                  <p>
-                    <strong>Categoría:</strong> {prod.categoria}
-                  </p>
-                  <p>
-                    <strong>Descripción:</strong>
-                  </p>
-                  <p dangerouslySetInnerHTML={{ __html: prod.descripcion.replace(/\n/g, "<br>") }} />
+                  <p><strong>Categoría:</strong> {prod.categoria}</p>
+                  <p><strong>Descripción:</strong></p>
+                  <p dangerouslySetInnerHTML={{
+                    __html: prod.descripcion.replace(/\n/g, "<br>")
+                  }} />
                 </div>
               )}
             </div>
@@ -195,7 +185,7 @@ const Productos = () => {
       <footer>
         <p>&copy; 2025 Marketplace EcuaLocal - Todos los derechos reservados</p>
       </footer>
-    </>
+    </div>
   );
 };
 

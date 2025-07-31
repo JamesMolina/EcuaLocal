@@ -366,3 +366,28 @@ footer {
     padding: 10px 22px;
   }
 }
+
+/* Información del usuario en la cabecera */
+.usuario-info {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  user-select: none;
+  z-index: 10;
+}
+
+/* Imagen pequeña de perfil */
+.perfil-img {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(69, 123, 157, 0.2);
+  object-fit: cover;
+}
+
