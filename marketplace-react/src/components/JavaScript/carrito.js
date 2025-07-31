@@ -1,46 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import perfilImg from "../../img/Perfil.png";
 import "../css/carrito.css";
+import { MarketplaceContext } from "./MarketplaceContext";
 
 function Carrito() {
-  const [carrito, setCarrito] = useState([]);
-  const [total, setTotal] = useState(0);
+  const navigate = useNavigate();
+  const { carrito, actualizarCantidad, eliminarProductoCarrito, vaciarCarrito } = useContext(MarketplaceContext);
+  const [usuario] = useState("User"); // Aquí podrías integrar un estado real de usuario luego
 
-  // Cargar carrito desde localStorage
-  useEffect(() => {
-    const items = JSON.parse(localStorage.getItem("carrito")) || [];
-    setCarrito(items);
-  }, []);
-
-  // Calcular total cada vez que cambia el carrito
-  useEffect(() => {
-    const nuevoTotal = carrito.reduce(
-      (acc, prod) => acc + prod.precio * prod.cantidad,
-      0
-    );
-    setTotal(nuevoTotal);
-    localStorage.setItem("carrito", JSON.stringify(carrito));
-  }, [carrito]);
-
-  const incrementar = (idx) => {
-    setCarrito((prev) =>
-      prev.map((p, i) => (i === idx ? { ...p, cantidad: p.cantidad + 1 } : p))
-    );
-  };
-
-  const decrementar = (idx) => {
-    setCarrito((prev) =>
-      prev.map((p, i) =>
-        i === idx && p.cantidad > 1 ? { ...p, cantidad: p.cantidad - 1 } : p
-      )
-    );
-  };
-
-  const eliminar = (idx) => {
-    if (window.confirm("¿Seguro que deseas eliminar este producto?")) {
-      setCarrito((prev) => prev.filter((_, i) => i !== idx));
-    }
-  };
+  const total = carrito.reduce((acc, prod) => acc + prod.precio * prod.cantidad, 0);
 
   const comprar = () => {
     if (carrito.length === 0) {
@@ -48,15 +17,14 @@ function Carrito() {
       return;
     }
     alert("Compra realizada con éxito ✅");
-    setCarrito([]);
-    localStorage.removeItem("carrito");
+    vaciarCarrito();
   };
 
   const handleCerrarSesion = (e) => {
     e.preventDefault();
     if (window.confirm("¿Estás seguro de que quieres cerrar sesión?")) {
-      localStorage.removeItem("carrito");
-      window.location.href = "/";
+      vaciarCarrito();
+      navigate("/");
     }
   };
 
@@ -74,21 +42,25 @@ function Carrito() {
             gap: 5,
           }}
         >
-          <span>Bienvenido, User</span>
-          <img src={perfilImg} alt="User Icon" style={{ width: 20, height: 20 }} />
+          <span>Bienvenido, {usuario}</span>
+          <img
+            src={perfilImg}
+            alt="User Icon"
+            style={{ width: 20, height: 20, borderRadius: "50%" }}
+          />
         </div>
         <nav>
           <ul>
             <li>
-              <a href="/productos">Seguir Comprando</a>
+              <Link to="/productos">Seguir Comprando</Link>
             </li>
             <li>
-              <a href="/dashboard">Panel de Vendedor</a>
+              <Link to="/dashboard">Panel de Vendedor</Link>
             </li>
             <li>
-              <a href="/" onClick={handleCerrarSesion}>
+              <Link to="/" onClick={handleCerrarSesion}>
                 Cerrar Sesión
-              </a>
+              </Link>
             </li>
           </ul>
         </nav>
@@ -101,19 +73,22 @@ function Carrito() {
           {carrito.length === 0 ? (
             <p>No tienes productos en el carrito.</p>
           ) : (
-            carrito.map((prod, idx) => (
-              <div key={idx} className="producto-carrito">
+            carrito.map((prod) => (
+              <div key={prod.id} className="producto-carrito">
                 <img src={prod.imagen} alt={prod.nombre} />
                 <h4>{prod.nombre}</h4>
                 <p>${prod.precio}</p>
 
                 <div className="cantidad">
-                  <button onClick={() => decrementar(idx)}>-</button>
+                  <button onClick={() => actualizarCantidad(prod.id, prod.cantidad - 1)}>-</button>
                   <span>{prod.cantidad}</span>
-                  <button onClick={() => incrementar(idx)}>+</button>
+                  <button onClick={() => actualizarCantidad(prod.id, prod.cantidad + 1)}>+</button>
                 </div>
 
-                <button className="eliminar" onClick={() => eliminar(idx)}>
+                <button
+                  className="eliminar"
+                  onClick={() => eliminarProductoCarrito(prod.id)}
+                >
                   Eliminar
                 </button>
               </div>

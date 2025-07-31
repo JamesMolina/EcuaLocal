@@ -1,44 +1,45 @@
-
-import React, { useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import perfilImg from "../../img/Perfil.png";
 import "../css/dashboard.css";
+import { MarketplaceContext } from "./MarketplaceContext";
 
+const generarId = () => "_" + Math.random().toString(36).substr(2, 9);
 
 function Dashboard() {
+  const navigate = useNavigate();
 
-  const [productos, setProductos] = useState([]);
+  const {
+    productos,
+    agregarProducto,
+    editarProducto,
+    eliminarProducto,
+    vaciarCarrito,
+  } = useContext(MarketplaceContext);
+
+  // Estado para simular usuario (puedes cambiarlo por un contexto de auth o similar)
+  const [usuario] = useState("User");
+
   const [form, setForm] = useState({
     nombre: "",
     precio: "",
     categoria: "electronica",
     estado: "nuevo",
     descripcion: "",
-    imagen: ""
+    imagen: "",
   });
 
-
-  useEffect(() => {
-    const prods = JSON.parse(localStorage.getItem("productos")) || [];
-    setProductos(prods);
-  }, []);
-
-  
-  useEffect(() => {
-    localStorage.setItem("productos", JSON.stringify(productos));
-  }, [productos]);
-
- 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  
   const handleSubmit = (e) => {
     e.preventDefault();
     let { nombre, precio, categoria, estado, descripcion, imagen } = form;
     nombre = nombre.trim();
     descripcion = descripcion.trim();
+
     if (!/^[0-9]+(\.[0-9]{1,2})?$/.test(precio)) {
       alert("El precio debe tener máximo dos decimales.");
       return;
@@ -48,14 +49,30 @@ function Dashboard() {
       alert("El precio debe ser mayor a 0.");
       return;
     }
+
     if (nombre && precio && imagen && descripcion) {
-      setProductos((prev) => [...prev, { nombre, precio, categoria, estado, imagen, descripcion }]);
-      setForm({ nombre: "", precio: "", categoria: "electronica", estado: "nuevo", descripcion: "", imagen: "" });
+      const nuevoProducto = {
+        id: generarId(),
+        nombre,
+        precio,
+        categoria,
+        estado,
+        imagen,
+        descripcion,
+      };
+      agregarProducto(nuevoProducto);
+      setForm({
+        nombre: "",
+        precio: "",
+        categoria: "electronica",
+        estado: "nuevo",
+        descripcion: "",
+        imagen: "",
+      });
     }
   };
 
-  
-  const handleGuardar = (idx, nuevo) => {
+  const handleGuardar = (id, nuevo) => {
     if (!/^[0-9]+(\.[0-9]{1,2})?$/.test(nuevo.precio)) {
       alert("El precio debe tener máximo dos decimales.");
       return;
@@ -65,48 +82,64 @@ function Dashboard() {
       return;
     }
     if (window.confirm("¿Estás seguro de que quieres guardar los cambios?")) {
+      editarProducto(id, nuevo);
       alert("Cambios guardados");
-      setProductos((prev) => prev.map((p, i) => (i === idx ? nuevo : p)));
     }
   };
 
-  
-  const handleEliminar = (idx) => {
-    setProductos((prev) => prev.filter((_, i) => i !== idx));
+  const handleEliminar = (id) => {
+    if (window.confirm("¿Seguro que deseas eliminar este producto?")) {
+      eliminarProducto(id);
+    }
   };
-
 
   const handleCerrarSesion = (e) => {
     e.preventDefault();
     if (window.confirm("¿Estás seguro de que quieres cerrar sesión?")) {
-      localStorage.removeItem("carrito");
-      window.location.href = "/";
+      vaciarCarrito();
+      navigate("/");
     }
   };
-
 
   const handleInicio = (e) => {
     e.preventDefault();
     if (window.confirm("Al ir a la página de inicio, se cerrará su sesión. ¿Deseas continuar?")) {
-      localStorage.removeItem("carrito");
-      window.location.href = "/";
+      vaciarCarrito();
+      navigate("/");
     }
   };
 
   return (
     <>
-      <header style={{ position: 'relative' }}>
+      <header style={{ position: "relative" }}>
         <h1>Panel de Vendedor</h1>
-        <div style={{ position: 'absolute', top: 10, right: 10, display: 'flex', alignItems: 'center', gap: 5 }}>
-          <span>Bienvenido, User</span>
-          <img src={perfilImg} alt="User Icon" style={{ width: 20, height: 20 }} />
+        <div
+          style={{
+            position: "absolute",
+            top: 10,
+            right: 10,
+            display: "flex",
+            alignItems: "center",
+            gap: 5,
+          }}
+        >
+          <span>Bienvenido, {usuario}</span>
+          <img src={perfilImg} alt="User Icon" style={{ width: 20, height: 20, borderRadius: "50%" }} />
         </div>
         <nav>
           <ul>
-            <li><a href="/" onClick={handleInicio}>Inicio</a></li>
-            <li><a href="/productos">Mis Productos</a></li>
-            <li><a href="/carrito">Carrito</a></li>
-            <li><a href="/" id="cerrarSesion" onClick={handleCerrarSesion}>Cerrar Sesión</a></li>
+            <li>
+              <Link to="/" onClick={handleInicio}>Inicio</Link>
+            </li>
+            <li>
+              <Link to="/productos">Mis Productos</Link>
+            </li>
+            <li>
+              <Link to="/carrito">Carrito</Link>
+            </li>
+            <li>
+              <Link to="/" onClick={handleCerrarSesion} id="cerrarSesion">Cerrar Sesión</Link>
+            </li>
           </ul>
         </nav>
       </header>
@@ -140,7 +173,6 @@ function Dashboard() {
           <label htmlFor="imagen">Imagen (URL):</label>
           <input type="text" id="imagen" name="imagen" value={form.imagen} onChange={handleChange} required />
 
-          <div></div>
           <button type="submit">Subir Producto</button>
         </form>
       </section>
@@ -149,8 +181,8 @@ function Dashboard() {
         <h2>Mis productos</h2>
         <div id="listaProductos">
           {productos.length === 0 && <p>No hay productos aún.</p>}
-          {productos.map((prod, idx) => (
-            <ProductoEditable key={idx} prod={prod} idx={idx} onGuardar={handleGuardar} onEliminar={handleEliminar} />
+          {productos.map((prod) => (
+            <ProductoEditable key={prod.id} prod={prod} onGuardar={handleGuardar} onEliminar={handleEliminar} />
           ))}
         </div>
       </section>
@@ -162,35 +194,42 @@ function Dashboard() {
   );
 }
 
-
-function ProductoEditable({ prod, idx, onGuardar, onEliminar }) {
+function ProductoEditable({ prod, onGuardar, onEliminar }) {
   const [edit, setEdit] = useState({ ...prod });
   return (
     <div className="producto">
       <img src={edit.imagen} alt={edit.nombre} className="vista-imagen" />
-      <form className="form-editar" onSubmit={e => { e.preventDefault(); onGuardar(idx, edit); }}>
+      <form
+        className="form-editar"
+        onSubmit={(e) => {
+          e.preventDefault();
+          onGuardar(prod.id, edit);
+        }}
+      >
         <label>Nombre:</label>
-        <input type="text" value={edit.nombre} onChange={e => setEdit({ ...edit, nombre: e.target.value })} />
+        <input type="text" value={edit.nombre} onChange={(e) => setEdit({ ...edit, nombre: e.target.value })} />
         <label>Precio:</label>
-        <input type="decimal" value={edit.precio} onChange={e => setEdit({ ...edit, precio: e.target.value })} />
+        <input type="decimal" value={edit.precio} onChange={(e) => setEdit({ ...edit, precio: e.target.value })} />
         <label>Categoría:</label>
-        <select value={edit.categoria} onChange={e => setEdit({ ...edit, categoria: e.target.value })}>
+        <select value={edit.categoria} onChange={(e) => setEdit({ ...edit, categoria: e.target.value })}>
           <option value="electronica">Electrónica</option>
           <option value="ropa">Ropa</option>
           <option value="hogar">Hogar</option>
           <option value="alimentos">Alimentos</option>
         </select>
         <label>Estado:</label>
-        <select value={edit.estado} onChange={e => setEdit({ ...edit, estado: e.target.value })}>
+        <select value={edit.estado} onChange={(e) => setEdit({ ...edit, estado: e.target.value })}>
           <option value="nuevo">Nuevo</option>
           <option value="usado">Usado</option>
         </select>
         <label>Descripción:</label>
-        <textarea value={edit.descripcion} onChange={e => setEdit({ ...edit, descripcion: e.target.value })}></textarea>
+        <textarea value={edit.descripcion} onChange={(e) => setEdit({ ...edit, descripcion: e.target.value })}></textarea>
         <label>Imagen:</label>
-        <input type="text" value={edit.imagen} onChange={e => setEdit({ ...edit, imagen: e.target.value })} />
+        <input type="text" value={edit.imagen} onChange={(e) => setEdit({ ...edit, imagen: e.target.value })} />
         <button type="submit">Guardar Cambios</button>
-        <button type="button" onClick={() => onEliminar(idx)}>Eliminar</button>
+        <button type="button" onClick={() => onEliminar(prod.id)}>
+          Eliminar
+        </button>
       </form>
     </div>
   );

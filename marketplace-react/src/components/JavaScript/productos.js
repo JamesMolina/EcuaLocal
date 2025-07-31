@@ -1,32 +1,28 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import perfilImg from "../../img/Perfil.png";
 import "../css/productos.css";
+import { MarketplaceContext } from "./MarketplaceContext";
 
 const Productos = () => {
   const navigate = useNavigate();
+  const { productos, agregarProductoCarrito } = useContext(MarketplaceContext);
+  const [usuario] = useState("User"); // Puedes reemplazar con estado real de usuario
 
-  const [productos, setProductos] = useState(() => {
-    return JSON.parse(localStorage.getItem("productos")) || [];
-  });
-
-  const [productosFiltrados, setProductosFiltrados] = useState(productos);
-
+  const [productosFiltrados, setProductosFiltrados] = useState([]);
   const [categoria, setCategoria] = useState("todos");
   const [estado, setEstado] = useState("todos");
   const [precioMax, setPrecioMax] = useState("");
   const [nombre, setNombre] = useState("");
-
-  const [cantidades, setCantidades] = useState(() => {
-    const initial = {};
-    productos.forEach((_, idx) => {
-      initial[idx] = 1;
-    });
-    return initial;
-  });
+  const [cantidades, setCantidades] = useState({});
+  const [detallesVisibles, setDetallesVisibles] = useState({});
 
   useEffect(() => {
-    localStorage.setItem("productos", JSON.stringify(productos));
+    const initial = {};
+    productos.forEach((p) => {
+      initial[p.id] = 1;
+    });
+    setCantidades(initial);
   }, [productos]);
 
   useEffect(() => {
@@ -41,44 +37,35 @@ const Productos = () => {
     setProductosFiltrados(filtrados);
   }, [categoria, estado, precioMax, nombre, productos]);
 
-  const incrementar = (idx) => {
+  const incrementar = (id) => {
     setCantidades((prev) => ({
       ...prev,
-      [idx]: prev[idx] + 1,
+      [id]: prev[id] + 1,
     }));
   };
 
-  const decrementar = (idx) => {
+  const decrementar = (id) => {
     setCantidades((prev) => ({
       ...prev,
-      [idx]: prev[idx] > 1 ? prev[idx] - 1 : 1,
+      [id]: prev[id] > 1 ? prev[id] - 1 : 1,
     }));
   };
 
-  const [detallesVisibles, setDetallesVisibles] = useState({});
-
-  const toggleDetalles = (idx) => {
+  const toggleDetalles = (id) => {
     setDetallesVisibles((prev) => ({
       ...prev,
-      [idx]: !prev[idx],
+      [id]: !prev[id],
     }));
   };
 
-  const agregarAlCarrito = (idx) => {
-    let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-    const producto = {
-      ...productosFiltrados[idx],
-      cantidad: cantidades[idx],
-    };
-    carrito.push(producto);
-    localStorage.setItem("carrito", JSON.stringify(carrito));
-    alert("Producto añadido al carrito!");
+  const handleAgregar = (producto) => {
+    agregarProductoCarrito(producto, cantidades[producto.id]);
+    alert("Producto añadido al carrito 🛒");
   };
 
   const cerrarSesion = (e) => {
     e.preventDefault();
     if (window.confirm("¿Estás seguro de que quieres cerrar sesión?")) {
-      localStorage.removeItem("carrito");
       navigate("/");
     }
   };
@@ -86,7 +73,6 @@ const Productos = () => {
   const irInicio = (e) => {
     e.preventDefault();
     if (window.confirm("Al ir a la página de inicio, se cerrará su sesión. ¿Deseas continuar?")) {
-      localStorage.removeItem("carrito");
       navigate("/");
     }
   };
@@ -103,18 +89,33 @@ const Productos = () => {
             display: "flex",
             alignItems: "center",
             gap: 5,
-            zIndex: 100,
           }}
         >
-          <span>Bienvenido, User</span>
-          <img src={perfilImg} alt="User Icon" style={{ width: 20, height: 20, borderRadius: "50%" }} />
+          <span>Bienvenido, {usuario}</span>
+          <img
+            src={perfilImg}
+            alt="User Icon"
+            style={{ width: 20, height: 20, borderRadius: "50%" }}
+          />
         </div>
         <nav>
           <ul>
-            <li><a href="/" onClick={irInicio}>Inicio</a></li>
-            <li><a href="/carrito">Carrito</a></li>
-            <li><a href="/dashboard">Panel de Vendedor</a></li>
-            <li><a href="/" onClick={cerrarSesion}>Cerrar Sesión</a></li>
+            <li>
+              <a href="/" onClick={irInicio}>
+                Inicio
+              </a>
+            </li>
+            <li>
+              <Link to="/carrito">Carrito</Link>
+            </li>
+            <li>
+              <Link to="/dashboard">Panel de Vendedor</Link>
+            </li>
+            <li>
+              <a href="/" onClick={cerrarSesion}>
+                Cerrar Sesión
+              </a>
+            </li>
           </ul>
         </nav>
       </header>
@@ -140,45 +141,47 @@ const Productos = () => {
         <input
           type="number"
           id="precio"
-          placeholder="Ejemplo: 100"
           value={precioMax}
           onChange={(e) => setPrecioMax(e.target.value)}
         />
 
-        <label htmlFor="nombre">Nombre de producto</label>
+        <label htmlFor="nombre">Nombre:</label>
         <input
           type="text"
           id="nombre"
-          placeholder="Ejemplo: Laptop"
           value={nombre}
           onChange={(e) => setNombre(e.target.value)}
         />
 
-        <button id="filtrar">Filtrar</button>
+        {/* El botón filtrar no es necesario porque el filtrado es reactivo */}
       </section>
 
-      <section className="productos-lista" id="contenedorProductos">
+      <section className="productos-lista">
         {productosFiltrados.length === 0 ? (
-          <p id="mensajeVacio">No se encontraron productos.</p>
+          <p>No se encontraron productos.</p>
         ) : (
-          productosFiltrados.map((prod, idx) => (
-            <div className="producto" key={idx}>
+          productosFiltrados.map((prod) => (
+            <div className="producto" key={prod.id}>
               <img src={prod.imagen} alt={prod.nombre} />
               <h3>{prod.nombre}</h3>
               <p>${prod.precio}</p>
               <div className="cantidad">
-                <button onClick={() => decrementar(idx)}>-</button>
-                <span>{cantidades[idx]}</span>
-                <button onClick={() => incrementar(idx)}>+</button>
+                <button onClick={() => decrementar(prod.id)}>-</button>
+                <span>{cantidades[prod.id]}</span>
+                <button onClick={() => incrementar(prod.id)}>+</button>
               </div>
-              <button onClick={() => agregarAlCarrito(idx)}>Añadir al carrito</button>
-              <button className="detalles" onClick={() => toggleDetalles(idx)}>
-                {detallesVisibles[idx] ? "Ocultar detalles" : "Ver detalles"}
+              <button onClick={() => handleAgregar(prod)}>Añadir al carrito</button>
+              <button className="detalles" onClick={() => toggleDetalles(prod.id)}>
+                {detallesVisibles[prod.id] ? "Ocultar detalles" : "Ver detalles"}
               </button>
-              {detallesVisibles[idx] && (
+              {detallesVisibles[prod.id] && (
                 <div className="detalles-info">
-                  <p><strong>Categoría:</strong> {prod.categoria}</p>
-                  <p><strong>Descripción:</strong></p>
+                  <p>
+                    <strong>Categoría:</strong> {prod.categoria}
+                  </p>
+                  <p>
+                    <strong>Descripción:</strong>
+                  </p>
                   <p dangerouslySetInnerHTML={{ __html: prod.descripcion.replace(/\n/g, "<br>") }} />
                 </div>
               )}
