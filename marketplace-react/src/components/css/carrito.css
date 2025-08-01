@@ -1,4 +1,3 @@
-/* ==== Estilos base ==== */
 body {
     font-family: 'Poppins', Arial, sans-serif;
     background: linear-gradient(135deg, #f8fafc 0%, #e0e7ef 100%);
@@ -7,8 +6,6 @@ body {
     padding: 0;
 }
 
-
-/* ==== Header ==== */
 header {
     background: linear-gradient(90deg, #1d3557 60%, #457b9d 100%);
     color: #fff;
@@ -45,7 +42,7 @@ header nav ul li a:hover {
     color: #1d3557;
 }
 
-/* ==== Footer ==== */
+
 footer {
     text-align: center;
     color: #457b9d;
@@ -54,7 +51,7 @@ footer {
     margin-top: auto;
 }
 
-/* ==== Contenedor Carrito ==== */
+
 .carrito {
     max-width: 750px;
     margin: 28px auto 20px auto;
@@ -71,7 +68,7 @@ footer {
     margin-bottom: 25px;
 }
 
-/* ==== Producto en el carrito ==== */
+
 .producto-carrito {
     display: flex;
     align-items: center;
@@ -95,7 +92,7 @@ footer {
     max-width: 60px;
 }
 
-/* ==== Botones Generales ==== */
+
 button {
     background: linear-gradient(90deg, #e63946 60%, #f3722c 100%);
     color: #fff;
@@ -115,7 +112,7 @@ button:hover {
     transform: translateY(-2px) scale(1.03);
 }
 
-/* ==== Botones de cantidad ==== */
+
 .cantidad {
     display: flex;
     align-items: center;
@@ -140,7 +137,7 @@ button:hover {
     font-weight: bold;
 }
 
-/* ==== Botón eliminar ==== */
+
 .eliminar {
     background: #e63946 !important;
     padding: 6px 14px;
@@ -150,7 +147,7 @@ button:hover {
     background: #d62828 !important;
 }
 
-/* ==== Total ==== */
+
 .carrito-total {
     text-align: right;
     font-size: 1.3rem;
@@ -159,7 +156,6 @@ button:hover {
     margin-top: 15px;
 }
 
-/* ==== Botón comprar ==== */
 #comprar {
     display: block;
     width: 100%;
@@ -172,7 +168,6 @@ button:hover {
     background: linear-gradient(90deg, #05b383 60%, #0f6f91 100%);
 }
 
-/* ==== Responsive ==== */
 @media (max-width: 600px) {
     .producto-carrito {
         flex-direction: column;

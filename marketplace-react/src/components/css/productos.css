@@ -1,6 +1,6 @@
-/* Variables de color para tema claro y oscuro */
+
 :root {
-  /* Claro */
+
   --bg-gradient-start: #f8fafc;
   --bg-gradient-end: #e0e7ef;
   --text-primary: #22223b;
@@ -30,20 +30,16 @@
   --shadow-hover: rgba(0, 0, 0, 0.7);
 }
 
-/* Fuentes y fondo general */
 body {
   font-family: 'Poppins', Arial, sans-serif;
   background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
 
-/* Barra de filtros con estilo acorde al sitio */
 .filtros {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 22px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
   background: #fff;
-  padding: 18px 32px 16px 32px;
+  padding: 24px 32px 18px 32px;
   border-radius: 16px;
   margin: 28px auto 32px auto;
   max-width: 950px;
@@ -78,7 +74,9 @@ body {
   width: 100px;
 }
 .filtros input[type="text"] {
-  width: 140px;
+  width: 220px;
+  font-size: 1.12rem;
+  padding: 8px 18px;
 }
   justify-content: center;
   gap: 24px;
@@ -105,7 +103,7 @@ nav ul li a:focus {
   box-shadow: 0 0 6px rgba(168, 218, 220, 0.7);
 }
 
-/* Filtros */
+
 
 .filtros {
     text-align: center;
@@ -144,7 +142,7 @@ nav ul li a:focus {
 }
 
 
-/* Mensaje vacío */
+
 #mensajeVacio {
   grid-column: 1 / -1;
   background: var(--detalle-bg);
@@ -160,7 +158,7 @@ nav ul li a:focus {
   transition: background-color 0.5s ease, color 0.5s ease;
 }
 
-/* Productos grid */
+
 .productos-lista {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -171,7 +169,7 @@ nav ul li a:focus {
   margin: 0 auto 60px auto;
 }
 
-/* Producto */
+
 .producto {
   background: var(--detalle-bg);
   padding: 20px 18px 20px;
@@ -181,7 +179,10 @@ nav ul li a:focus {
   transition: box-shadow 0.25s ease, transform 0.2s ease;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
+  align-items: stretch;
+  min-height: 540px;
+  height: 100%;
   cursor: default;
   will-change: transform;
 }
@@ -191,7 +192,7 @@ nav ul li a:focus {
   transform: translateY(-3px) scale(1.04);
 }
 
-/* Título producto */
+
 .producto h3 {
   font-size: 1.22rem;
   margin: 14px 0 12px 0;
@@ -205,7 +206,7 @@ nav ul li a:focus {
   letter-spacing: 0.03em;
 }
 
-/* Imagen producto con animación */
+
 .producto img {
   width: 100%;
   border-radius: 14px;
@@ -220,7 +221,7 @@ nav ul li a:focus {
   filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.12));
 }
 
-/* Botones */
+
 button {
   background: linear-gradient(90deg, var(--button-gradient-start) 60%, var(--button-gradient-end) 100%);
   color: #fff;
@@ -245,7 +246,7 @@ button:focus {
   outline: none;
 }
 
-/* Cantidad */
+
 .cantidad {
   display: flex;
   align-items: center;
@@ -278,7 +279,7 @@ button:focus {
   user-select: none;
 }
 
-/* Botón detalles */
+
 .detalles {
   background: linear-gradient(90deg, var(--header-gradient-end) 60%, var(--header-gradient-start) 100%);
   color: white;
@@ -299,7 +300,7 @@ button:focus {
   outline: none;
 }
 
-/* Info detalles */
+
 .detalles-info {
   background: var(--detalle-bg);
   border-radius: 12px;
@@ -314,7 +315,7 @@ button:focus {
   transition: background-color 0.5s ease, color 0.5s ease;
 }
 
-/* Footer */
+
 footer {
   margin-top: auto;
   text-align: center;
@@ -326,12 +327,12 @@ footer {
   transition: color 0.5s ease;
 }
 
-/* Animaciones suaves para todo */
+
 * {
   transition-timing-function: ease-in-out;
 }
 
-/* Responsive */
+
 @media (max-width: 900px) {
   .filtros {
     flex-direction: column;
@@ -367,7 +368,7 @@ footer {
   }
 }
 
-/* Información del usuario en la cabecera */
+
 .usuario-info {
   position: absolute;
   top: 15px;
@@ -382,7 +383,7 @@ footer {
   z-index: 10;
 }
 
-/* Imagen pequeña de perfil */
+
 .perfil-img {
   width: 20px;
   height: 20px;

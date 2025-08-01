@@ -27,7 +27,7 @@ export const MarketplaceProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    // Solo guardar si hay productos (evita sobreescribir con [])
+    // Solo guardar si hay productos
     if (productos.length > 0) {
       localStorage.setItem("productos", JSON.stringify(productos));
       console.log("[DEBUG] Guardando productos en localStorage:", productos);
@@ -105,6 +105,7 @@ export const MarketplaceProvider = ({ children }) => {
 
   const vaciarCarrito = () => {
     setCarrito([]);
+    localStorage.removeItem("carrito");
   };
 
   return (

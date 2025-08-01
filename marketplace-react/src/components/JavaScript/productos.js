@@ -9,7 +9,7 @@ const Productos = () => {
   const { productos, agregarProductoCarrito } = useContext(MarketplaceContext);
   const [usuario] = useState("User");
 
-  // Filtros
+  
   const [productosFiltrados, setProductosFiltrados] = useState([]);
   const [categoria, setCategoria] = useState("todos");
   const [estado, setEstado] = useState("todos");
@@ -133,7 +133,7 @@ const cerrarSesion = (e) => {
           />
         </div>
         <div>
-          <label htmlFor="nombre">Nombre:</label>
+          <label htmlFor="nombre">Nombre del producto:</label>
           <input
             type="text"
             id="nombre"
@@ -172,7 +172,8 @@ const cerrarSesion = (e) => {
 
               {detallesVisibles[prod.id] && (
                 <div className="detalles-info">
-                  <p><strong>Categoría:</strong> {prod.categoria}</p>
+                  <p><strong>Categoría:</strong> {prod.categoria.charAt(0).toUpperCase() + prod.categoria.slice(1)}</p>
+                  <p><strong>Estado:</strong> {prod.estado.charAt(0).toUpperCase() + prod.estado.slice(1)}</p>
                   <p><strong>Descripción:</strong></p>
                   <p dangerouslySetInnerHTML={{
                     __html: prod.descripcion.replace(/\n/g, "<br>")

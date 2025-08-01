@@ -15,7 +15,7 @@ root.render(
   </React.StrictMode>
 );
 
-// Si quieres medir el rendimiento de la app
+
 reportWebVitals(console.log);
 console.log("[DEBUG] App renderizada");
 

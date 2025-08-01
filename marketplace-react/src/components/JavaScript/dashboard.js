@@ -16,6 +16,7 @@ function Dashboard() {
     eliminarProducto,
   } = useContext(MarketplaceContext);
 
+  
   const [usuario] = useState("User");
 
   const [form, setForm] = useState({
@@ -91,42 +92,41 @@ function Dashboard() {
     }
   };
 
-  const handleCerrarSesion = (e) => {
-    e.preventDefault();
-    if (window.confirm("¿Estás seguro de que quieres cerrar sesión?")) {
-      navigate("/");
-    }
-  };
+const handleCerrarSesion = (e) => {
+  e.preventDefault();
+  if (window.confirm("¿Estás seguro de que quieres cerrar sesión?")) {
+    navigate("/");
+  }
+};
 
-  const handleInicio = (e) => {
-    e.preventDefault();
-    if (
-      window.confirm(
-        "Al ir a la página de inicio, se cerrará su sesión. ¿Deseas continuar?"
-      )
-    ) {
-      navigate("/");
-    }
-  };
+const handleInicio = (e) => {
+  e.preventDefault();
+  if (window.confirm("Al ir a la página de inicio, se cerrará su sesión. ¿Deseas continuar?")) {
+    navigate("/");
+  }
+};
 
   return (
     <>
-      <header>
+      <header style={{ position: "relative" }}>
         <h1>Panel de Vendedor</h1>
-        <div className="user-info">
+        <div
+          style={{
+            position: "absolute",
+            top: 10,
+            right: 10,
+            display: "flex",
+            alignItems: "center",
+            gap: 5,
+          }}
+        >
           <span>Bienvenido, {usuario}</span>
-          <img
-            src={perfilImg}
-            alt="User Icon"
-            className="user-icon"
-          />
+          <img src={perfilImg} alt="User Icon" style={{ width: 20, height: 20, borderRadius: "50%" }} />
         </div>
         <nav>
           <ul>
             <li>
-              <Link to="/" onClick={handleInicio}>
-                Inicio
-              </Link>
+              <Link to="/" onClick={handleInicio}>Inicio</Link>
             </li>
             <li>
               <Link to="/productos">Productos</Link>
@@ -135,9 +135,7 @@ function Dashboard() {
               <Link to="/carrito">Carrito</Link>
             </li>
             <li>
-              <Link to="/" onClick={handleCerrarSesion} id="cerrarSesion">
-                Cerrar Sesión
-              </Link>
+              <Link to="/" onClick={handleCerrarSesion} id="cerrarSesion">Cerrar Sesión</Link>
             </li>
           </ul>
         </nav>
@@ -147,32 +145,13 @@ function Dashboard() {
         <h2>Subir nuevo producto</h2>
         <form className="form-editar" onSubmit={handleSubmit}>
           <label htmlFor="nombre">Nombre del producto:</label>
-          <input
-            type="text"
-            id="nombre"
-            name="nombre"
-            value={form.nombre}
-            onChange={handleChange}
-            required
-          />
+          <input type="text" id="nombre" name="nombre" value={form.nombre} onChange={handleChange} required />
 
           <label htmlFor="precio">Precio:</label>
-          <input
-            type="decimal"
-            id="precio"
-            name="precio"
-            value={form.precio}
-            onChange={handleChange}
-            required
-          />
+          <input type="decimal" id="precio" name="precio" value={form.precio} onChange={handleChange} required />
 
           <label htmlFor="categoria">Categoría:</label>
-          <select
-            id="categoria"
-            name="categoria"
-            value={form.categoria}
-            onChange={handleChange}
-          >
+          <select id="categoria" name="categoria" value={form.categoria} onChange={handleChange}>
             <option value="electronica">Electrónica</option>
             <option value="ropa">Ropa</option>
             <option value="hogar">Hogar</option>
@@ -180,34 +159,16 @@ function Dashboard() {
           </select>
 
           <label htmlFor="estado">Estado del producto:</label>
-          <select
-            id="estado"
-            name="estado"
-            value={form.estado}
-            onChange={handleChange}
-          >
+          <select id="estado" name="estado" value={form.estado} onChange={handleChange}>
             <option value="nuevo">Nuevo</option>
             <option value="usado">Usado</option>
           </select>
 
           <label htmlFor="descripcion">Descripción:</label>
-          <textarea
-            id="descripcion"
-            name="descripcion"
-            value={form.descripcion}
-            onChange={handleChange}
-            required
-          ></textarea>
+          <textarea id="descripcion" name="descripcion" value={form.descripcion} onChange={handleChange} required></textarea>
 
           <label htmlFor="imagen">Imagen (URL):</label>
-          <input
-            type="text"
-            id="imagen"
-            name="imagen"
-            value={form.imagen}
-            onChange={handleChange}
-            required
-          />
+          <input type="text" id="imagen" name="imagen" value={form.imagen} onChange={handleChange} required />
 
           <button type="submit">Subir Producto</button>
         </form>
@@ -218,12 +179,7 @@ function Dashboard() {
         <div id="listaProductos">
           {productos.length === 0 && <p>No hay productos aún.</p>}
           {productos.map((prod) => (
-            <ProductoEditable
-              key={prod.id}
-              prod={prod}
-              onGuardar={handleGuardar}
-              onEliminar={handleEliminar}
-            />
+            <ProductoEditable key={prod.id} prod={prod} onGuardar={handleGuardar} onEliminar={handleEliminar} />
           ))}
         </div>
       </section>
@@ -237,7 +193,6 @@ function Dashboard() {
 
 function ProductoEditable({ prod, onGuardar, onEliminar }) {
   const [edit, setEdit] = useState({ ...prod });
-
   return (
     <div className="producto">
       <img src={edit.imagen} alt={edit.nombre} className="vista-imagen" />
@@ -249,58 +204,29 @@ function ProductoEditable({ prod, onGuardar, onEliminar }) {
         }}
       >
         <label>Nombre:</label>
-        <input
-          type="text"
-          value={edit.nombre}
-          onChange={(e) => setEdit({ ...edit, nombre: e.target.value })}
-        />
-
+        <input type="text" value={edit.nombre} onChange={(e) => setEdit({ ...edit, nombre: e.target.value })} />
         <label>Precio:</label>
-        <input
-          type="decimal"
-          value={edit.precio}
-          onChange={(e) => setEdit({ ...edit, precio: e.target.value })}
-        />
-
+        <input type="decimal" value={edit.precio} onChange={(e) => setEdit({ ...edit, precio: e.target.value })} />
         <label>Categoría:</label>
-        <select
-          value={edit.categoria}
-          onChange={(e) => setEdit({ ...edit, categoria: e.target.value })}
-        >
+        <select value={edit.categoria} onChange={(e) => setEdit({ ...edit, categoria: e.target.value })}>
           <option value="electronica">Electrónica</option>
           <option value="ropa">Ropa</option>
           <option value="hogar">Hogar</option>
           <option value="alimentos">Alimentos</option>
         </select>
-
         <label>Estado:</label>
-        <select
-          value={edit.estado}
-          onChange={(e) => setEdit({ ...edit, estado: e.target.value })}
-        >
+        <select value={edit.estado} onChange={(e) => setEdit({ ...edit, estado: e.target.value })}>
           <option value="nuevo">Nuevo</option>
           <option value="usado">Usado</option>
         </select>
-
         <label>Descripción:</label>
-        <textarea
-          value={edit.descripcion}
-          onChange={(e) => setEdit({ ...edit, descripcion: e.target.value })}
-        ></textarea>
-
+        <textarea value={edit.descripcion} onChange={(e) => setEdit({ ...edit, descripcion: e.target.value })}></textarea>
         <label>Imagen:</label>
-        <input
-          type="text"
-          value={edit.imagen}
-          onChange={(e) => setEdit({ ...edit, imagen: e.target.value })}
-        />
-
-        <div className="botones-accion">
-          <button type="submit">Guardar Cambios</button>
-          <button type="button" onClick={() => onEliminar(prod.id)}>
-            Eliminar
-          </button>
-        </div>
+        <input type="text" value={edit.imagen} onChange={(e) => setEdit({ ...edit, imagen: e.target.value })} />
+        <button type="submit">Guardar Cambios</button>
+        <button type="button" onClick={() => onEliminar(prod.id)}>
+          Eliminar
+        </button>
       </form>
     </div>
   );

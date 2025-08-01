@@ -23,7 +23,7 @@ function Carrito() {
   const handleCerrarSesion = (e) => {
   e.preventDefault();
   if (window.confirm("¿Estás seguro de que quieres cerrar sesión?")) {
-    navigate("/"); // Solo redirige, no vacía nada
+    navigate("/");
   }
 };
 

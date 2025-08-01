@@ -60,7 +60,7 @@ function Signup() {
     }
   };
 
-  // Aquí va el manejador del submit:
+  
   const handleSubmit = (e) => {
     e.preventDefault();
 
