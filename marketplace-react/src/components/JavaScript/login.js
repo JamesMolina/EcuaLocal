@@ -19,7 +19,10 @@ const Login = () => {
       setPasswordError("");
     }
 
-    if (email === "prueba@hotmail.com" && password === "PR1234") {
+    
+    const usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+    const usuario = usuarios.find(u => u.email === email && u.password === password);
+    if (usuario) {
       alert("Inicio de sesión exitoso");
       navigate("/productos");
     } else {

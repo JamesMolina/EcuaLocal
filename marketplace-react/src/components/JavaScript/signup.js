@@ -103,8 +103,33 @@ function Signup() {
 
     if (!valid) return;
 
+    
+    const nombre = e.target.nombre.value;
+    const email = e.target.email.value;
+
+    
+    let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+    
+    const existe = usuarios.some(u => u.email === email);
+    if (existe) {
+      alert("El correo ya está registrado");
+      return;
+    }
+
+    
+    const nuevoUsuario = {
+      nombre,
+      email,
+      password,
+      tipoUsuario,
+      nombreNegocio: tipoUsuario === "juridico" ? nombreNegocio : null,
+      ruc: tipoUsuario === "juridico" ? ruc : null
+    };
+    usuarios.push(nuevoUsuario);
+    localStorage.setItem("usuarios", JSON.stringify(usuarios));
+
     alert("¡Registro exitoso!");
-    navigate("/productos");
+    navigate("/login");
   };
 
   return (
